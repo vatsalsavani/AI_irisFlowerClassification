@@ -48,6 +48,18 @@ testOutput = [i[4] for i in testingData]
 
 # Neural Network
 
+# Function to Calculate Accuracy
+
+
+def calc_accuracy(npArr1, npArr2):
+    common = 0
+    for i in range(len(npArr1)-1):
+        for j in range(len(npArr1[i])-1):
+            if npArr1[i][j] == npArr2[i][j]:
+                common += 1
+    return common/len(npArr2)*100
+
+
 # Parameters
 learningRate = 0.001
 epoch = 700
@@ -124,6 +136,13 @@ with tf.Session() as sess:
 
     print('\nModel Predicting Begins . . .')
     for i in range(testDataSize):
+        correctOutput.append(np.rint(testOutput[i]))
+        predictedOutput.append(
+            np.rint(sess.run(model, feed_dict={inputs: [testInput[i]]})[0]))
 
-        print('Actual:', testOutput[i], 'Predicted:',  np.rint(
-            sess.run(model, feed_dict={inputs: [testInput[i]]})))
+        print('Actual:', correctOutput[i], 'Predicted:', predictedOutput[i])
+
+print()
+print('* '*10)
+print('Accuracy : {}%'.format(calc_accuracy(correctOutput, predictedOutput)))
+print('* '*10)
